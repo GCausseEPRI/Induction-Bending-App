@@ -1,0 +1,90 @@
+/*
+EPRI branding CSS rules to apply to all pages; these will be minified and
+inserted into the page when epri.init_page() is called.
+*/
+
+/* header container (fixed at top of page; full width) */
+.stApp > header {
+  background-repeat: no-repeat; /* logo will be the header's background image */
+  background-position: 56px 14px; /* logo position: 56px left = 4 space + 40 icon width + 12 space; 14px top = (46 header - 18 logo height) / 2 */
+}
+
+/* rainbow gradient (top of page; full width) */
+.stApp > header > [data-testid="stDecoration"] {
+  display: none; /* hide the gradient */
+}
+
+/* toolbar container (top of page on right side; shows runtime info and includes hamburger menu) */
+.stApp > header > [data-testid="stToolbar"] {
+  top: 0; /* remove an extraneous 2px top spacing */
+}
+
+/* hamburger menu (upper-right corner of page) */
+#MainMenu {
+  display: none; /* hide the entire menu */
+}
+
+/* icon in upper-left corner that reveals the sidebar */
+.appview-container > [data-testid="collapsedControl"] {
+  top: 5px; /* 5px centers the 36px high icon within the 46px high header; default was 0.5rem (8px) */
+}
+
+/* sidebar container (fixed on left side of page and covers part of the header) */
+.appview-container > [data-testid="stSidebar"] {
+  top: 0; /* remove an extraneous 2px top spacing */
+}
+
+/* sidebar content container */
+.appview-container > [data-testid="stSidebar"] > :first-child {
+  background-repeat: no-repeat; /* logo will be the sidebar's background image, which will cover the header's logo */
+  background-position: 16px 14px; /* logo position: 16px left = aligned with other sidebar content; 14px top = same as header's logo top */
+  background-attachment: local; /* will scroll the logo if the sidebar's content needs to scroll vertically */
+}
+
+/* sidebar title (to be inserted below the header space) */
+.appview-container > [data-testid="stSidebar"] > :first-child::before {
+  display: block;
+  font-weight: 600;
+  margin-top: 46px; /* ensures that sidebar content will not scroll over the logo; default was 0 */
+  padding: 16px 16px 0 16px;
+}
+
+/* icon (close button) that collapses the sidebar */
+.appview-container > [data-testid="stSidebar"] > :first-child > :first-child {
+  top: 5px; /* nudge up slightly for better alignment; default was 0.375rem (6px) */
+}
+
+/* sidebar nav links list */
+.appview-container > [data-testid="stSidebar"] > :first-child > [data-testid="stSidebarNav"] > ul:first-child {
+  padding-top: 1rem; /* reduces default top padding (was 6rem with no parent margin) */
+}
+
+/* remove "Made with Streamlit" footer */
+.main > footer {
+  display: none;
+}
+
+/* reduce vertical padding in main container */
+.main > .block-container {
+  padding-top: 3rem; /* default was 6rem */
+  padding-bottom: 1rem; /* default was 10rem */
+}
+
+/*
+  hide the custom style's container (removes undesired whitespace at top of page)
+  IMPORTANT: epri_branding.py must be used to load custom styles!
+ */
+.main > .block-container:first-child > :first-child > :first-child > .element-container:first-child {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5 {
+  padding: 0; /* remove vertical padding; default has top and bottom padding but no margin */
+  margin-bottom: 1rem;
+}
+
+/* horizontal line */
+hr {
+  margin: 1rem 0; /* default was 2em (32px) */
+}
