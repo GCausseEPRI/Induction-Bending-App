@@ -9,22 +9,20 @@ from branding import epri, icons # EPRI branding and style customizations
 
 @st.cache_data()
 def read_data() -> pd.DataFrame:
-	df = pd.read_pickle('data/machine_file.pickle')
+	df = pd.read_pickle('data/Final Data.pickle')
 
 	return df
 
-def  display_head(df_original: pd.DataFrame) -> None:
-	df_display = df_original.copy()
-	df_display['bend time'] = df_display['bend time'].astype(str).str[7:]
+def  display_head(df: pd.DataFrame) -> None:
 	st.header('Machine File Data')
-	st.write(df_display.head(100))
+	st.write(df.head(100))
 
 def get_plot_columns(columns: list) -> dict:
 	x_column = st.selectbox(
 		label='Select a column to use as the X axis',
 		options=columns
 	)
-	columns = columns.drop('bend time')
+	columns = columns.drop('Bend Time')
 	y_column_left = st.multiselect(
 		label='Select columns to attach to the left Y axis',
 		options=columns,
@@ -94,7 +92,7 @@ def main() -> None:
 	p = create_figure(columns['x_column'], left_label)
 
 	try:
-		if pd.api.types.is_timedelta64_dtype(df[columns['x_column']]):
+		if pd.api.types.is_datetime64_dtype(df[columns['x_column']]):
 			p.xaxis.formatter = DatetimeTickFormatter()
 
 		container = st.container()
