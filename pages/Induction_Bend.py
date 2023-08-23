@@ -3,7 +3,7 @@ import time
 import streamlit as st
 import pandas as pd
 from bokeh.plotting import figure, Figure
-from bokeh.models import LinearAxis, Range1d, DatetimeAxis, DatetimeTickFormatter
+from bokeh.models import LinearAxis, Range1d, DatetimeAxis, DatetimeTickFormatter, DataRange1d, Grid
 
 from branding import epri, icons # EPRI branding and style customizations
 
@@ -105,6 +105,18 @@ def main() -> None:
 			plot_dict_right[column] = get_plot_details(column)
 		
 		with container:
+			if len(columns['y_column_left']) > 0:
+				left_min = df[columns['y_column_left'][0]].min()
+				left_max = df[columns['y_column_left'][0]].max()
+				if len(columns['y_column_left']) > 1:
+					for column in columns['y_column_left']:
+						if df[column].min() < left_min:
+							left_min = df[column].min()
+						if df[column].max() > left_max:
+							left_max = df[column].max()
+			p.y_range = Range1d(left_min - ((left_max - left_min) * 0.08), left_max + ((left_max - left_min) * 0.08))
+			# p.y_range = Range1d(left_min, left_max)
+
 			for plot, details in plot_dict_left.items():
 				if details['type'] == 'Line':
 					p.line(
@@ -133,7 +145,9 @@ def main() -> None:
 							right_min = df[column].min()
 						if df[column].max() > right_max:
 							right_max = df[column].max()
-				p.extra_y_ranges['secondary'] = Range1d(right_min - ((right_max - right_min) * 0.08), right_max + ((right_max - right_min) * 0.08))
+				# p.extra_y_ranges = {'secondary': Range1d(right_min, right_max)}
+				p.extra_y_ranges = {'secondary': Range1d(right_min - ((right_max - right_min) * 0.08), right_max + ((right_max - right_min) * 0.08))}
+				
 				for plot, details in plot_dict_right.items():
 					if details['type'] == 'Line':
 						p.line(
@@ -154,14 +168,15 @@ def main() -> None:
 							y_range_name='secondary',
 							legend_label=plot
 						)
+						
 				right_label = columns['y_column_right'][0]
 				if len(columns['y_column_right']) > 1:
 					for column in columns['y_column_right'][1:]:
 						right_label += ', ' + column
-				ax2 = LinearAxis(y_range_name='secondary', axis_label=right_label)
-				p.add_layout(ax2, 'right')
+				p.add_layout(LinearAxis(y_range_name='secondary', axis_label=right_label), 'right')
 			p.axis.axis_label_text_font_style = 'normal'
 			p.toolbar.logo = None
+
 			plot, legend = st.columns([5, 1])
 			with legend:
 				legend_options = {
@@ -173,6 +188,7 @@ def main() -> None:
 				legend_location = st.radio('Legend Location', options=['top_left', 'top_right', 'bottom_left', 'bottom_right'], format_func=lambda x: legend_options.get(x), index=1)
 			p.legend.background_fill_alpha = 0.5
 			p.legend.location = legend_location
+
 			with plot:
 				st.bokeh_chart(p, use_container_width=True)
 
