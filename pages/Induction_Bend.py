@@ -75,7 +75,7 @@ def get_plot_details(column: list) -> tuple:
 	return {'type': graph_type, 'style': style, 'color': color}
 
 def main() -> None:
-	# epri.init_page(page_title='Home', layout='wide')	
+	epri.init_page(page_title='Home', layout='wide')	
 
 	st.title('Induction Bend App')
 	df = read_data()
