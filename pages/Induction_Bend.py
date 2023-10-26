@@ -115,7 +115,6 @@ def main() -> None:
 						if df[column].max() > left_max:
 							left_max = df[column].max()
 			p.y_range = Range1d(left_min - ((left_max - left_min) * 0.08), left_max + ((left_max - left_min) * 0.08))
-			# p.y_range = Range1d(left_min, left_max)
 
 			for plot, details in plot_dict_left.items():
 				if details['type'] == 'Line':
